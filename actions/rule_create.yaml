@@ -1,0 +1,28 @@
+ref: attune.rule_create
+label: "Create Rule"
+description: "Create a new rule"
+enabled: true
+runner_type: python
+entry_point: dispatch.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+parameters:
+  ref: { type: string, required: true, description: "Rule ref" }
+  label: { type: string, required: true, description: "Rule label" }
+  pack_ref: { type: string, required: true, description: "Pack ref" }
+  trigger_ref: { type: string, required: true, description: "Trigger ref" }
+  action_ref: { type: string, required: true, description: "Action ref" }
+  description: { type: string, description: "Rule description" }
+  enabled: { type: boolean, description: "Whether the rule is enabled" }
+  conditions: { type: object, description: "Rule conditions" }
+  action_params: { type: object, description: "Action parameters" }
+  trigger_params: { type: object, description: "Trigger parameters" }
+  api_url: { type: string, description: "Attune API base URL" }
+  api_token: { type: string, description: "Bearer token", secret: true }
+  verify_ssl: { type: boolean, default: true, description: "Verify TLS certificates" }
+  timeout: { type: integer, default: 30, description: "Request timeout in seconds" }
+output_schema:
+  success: { type: boolean }
+  data: { type: object, description: "Generated-client response payload" }
+tags: [attune, rule, api]

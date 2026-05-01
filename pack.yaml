@@ -1,0 +1,57 @@
+# Attune Meta-Pack
+# API-driven automation actions for interacting with an Attune deployment.
+
+ref: attune
+label: "Attune"
+description: "Meta-pack for interacting with Attune via its OpenAPI-generated Python client"
+version: "0.1.0"
+author: "Attune Team"
+email: "support@attune.io"
+
+system: false
+enabled: true
+
+conf_schema:
+  api_url:
+    type: string
+    description: "Base URL for the target Attune API"
+    default: "http://localhost:8080"
+  verify_ssl:
+    type: boolean
+    description: "Verify TLS certificates when calling the API"
+    default: true
+  default_timeout_seconds:
+    type: integer
+    description: "Default API timeout for actions in seconds"
+    default: 30
+    minimum: 1
+    maximum: 600
+
+config:
+  api_url: "http://localhost:8080"
+  verify_ssl: true
+  default_timeout_seconds: 30
+
+meta:
+  category: "system"
+  keywords:
+    - "attune"
+    - "api"
+    - "meta-pack"
+    - "automation"
+    - "openapi"
+  documentation_url: "https://docs.attune.io/packs/attune"
+  repository_url: "https://github.com/attune-io/attune"
+  python_dependencies:
+    - "attrs>=23.2.0"
+    - "httpx>=0.27.0"
+    - "python-dateutil>=2.9.0"
+
+tags:
+  - attune
+  - api
+  - automation
+  - meta
+
+runtime_deps:
+  - python

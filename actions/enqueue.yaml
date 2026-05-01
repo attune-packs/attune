@@ -1,0 +1,71 @@
+# Enqueue Action - Attune Meta-Pack
+# Inserts a single record into a configured work queue.
+#
+# Implemented as a Python action (uses httpx) so the system doesn't have to
+# distribute a per-platform native binary for it. Reads parameters as a single
+# JSON document on stdin and POSTs them to the Attune API at
+# /api/v1/queues/{queue_ref}/items using the execution-scoped ATTUNE_API_TOKEN.
+
+ref: attune.enqueue
+label: "Enqueue Queue Item"
+description: "Insert a single record into a work queue. Uses the queue's default priority unless one is provided."
+enabled: true
+
+runner_type: python
+
+entry_point: enqueue.py
+
+parameter_delivery: stdin
+parameter_format: json
+
+output_format: json
+
+parameters:
+  queue_ref:
+    type: string
+    description: "Reference of the work queue to insert into (e.g., core.inbox)."
+    required: true
+  payload:
+    type: object
+    description: "The record to enqueue. Will become the queue item payload."
+    required: true
+  priority:
+    type: integer
+    description: "Priority for this item. If omitted, the queue's default_priority applies."
+  item_key:
+    type: string
+    description: "Optional idempotency key used by the queue's update strategy."
+  metadata:
+    type: object
+    description: "Optional metadata stored alongside the item."
+
+output_schema:
+  success:
+    type: boolean
+    description: "True if the item was enqueued."
+  count:
+    type: integer
+    description: "Always 1 on success, 0 on failure."
+  id:
+    type: integer
+    description: "Database ID of the enqueued queue item."
+  queue:
+    type: string
+    description: "Reference of the queue the item landed in."
+  item_key:
+    type: string
+    description: "Resolved item key (if provided)."
+  priority:
+    type: integer
+    description: "Resolved priority for the item."
+  status:
+    type: string
+    description: "Initial queue item status (e.g., queued)."
+  items:
+    type: array
+    description: "Per-item result rows (always one entry for the single-item action)."
+
+tags:
+  - attune
+  - queues
+  - enqueue

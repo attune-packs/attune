@@ -1,0 +1,64 @@
+ref: attune.execution_list
+label: "List Executions"
+description: "List Attune executions with server-side filtering"
+enabled: true
+runner_type: python
+entry_point: execution_list.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+
+parameters:
+  status:
+    type: string
+    description: "Optional execution status filter"
+  action_ref:
+    type: string
+    description: "Optional action ref filter"
+  pack_name:
+    type: string
+    description: "Optional pack filter"
+  result_contains:
+    type: string
+    description: "Optional substring search against execution results"
+  enforcement:
+    type: integer
+    description: "Optional enforcement ID filter"
+  parent:
+    type: integer
+    description: "Optional parent execution ID filter"
+  page:
+    type: integer
+    description: "Page number"
+    default: 1
+  per_page:
+    type: integer
+    description: "Items per page"
+    default: 50
+  api_url:
+    type: string
+    description: "Attune API base URL"
+  api_token:
+    type: string
+    description: "Bearer token for the target Attune API"
+    secret: true
+  verify_ssl:
+    type: boolean
+    description: "Verify TLS certificates"
+    default: true
+  timeout:
+    type: integer
+    description: "Request timeout in seconds"
+    default: 30
+
+output_schema:
+  success:
+    type: boolean
+  data:
+    type: object
+    description: "Generated-client response payload"
+
+tags:
+  - attune
+  - execution
+  - api

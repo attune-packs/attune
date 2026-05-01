@@ -1,0 +1,24 @@
+ref: attune.trigger_update
+label: "Update Trigger"
+description: "Update an existing trigger"
+enabled: true
+runner_type: python
+entry_point: dispatch.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+parameters:
+  ref: { type: string, required: true, description: "Trigger ref" }
+  label: { type: string, description: "Updated label" }
+  description: { type: string, description: "Updated description" }
+  enabled: { type: boolean, description: "Updated enabled flag" }
+  param_schema: { type: object, description: "Updated parameter schema or null" }
+  out_schema: { type: object, description: "Updated output schema or null" }
+  api_url: { type: string, description: "Attune API base URL" }
+  api_token: { type: string, description: "Bearer token", secret: true }
+  verify_ssl: { type: boolean, default: true, description: "Verify TLS certificates" }
+  timeout: { type: integer, default: 30, description: "Request timeout in seconds" }
+output_schema:
+  success: { type: boolean }
+  data: { type: object, description: "Generated-client response payload" }
+tags: [attune, trigger, api]

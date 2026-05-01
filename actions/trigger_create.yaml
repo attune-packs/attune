@@ -1,0 +1,25 @@
+ref: attune.trigger_create
+label: "Create Trigger"
+description: "Create a new trigger"
+enabled: true
+runner_type: python
+entry_point: dispatch.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+parameters:
+  ref: { type: string, required: true, description: "Trigger ref" }
+  label: { type: string, required: true, description: "Trigger label" }
+  description: { type: string, description: "Trigger description" }
+  enabled: { type: boolean, description: "Whether the trigger is enabled" }
+  pack_ref: { type: string, description: "Optional pack ref" }
+  param_schema: { type: object, description: "Parameter schema" }
+  out_schema: { type: object, description: "Output schema" }
+  api_url: { type: string, description: "Attune API base URL" }
+  api_token: { type: string, description: "Bearer token", secret: true }
+  verify_ssl: { type: boolean, default: true, description: "Verify TLS certificates" }
+  timeout: { type: integer, default: 30, description: "Request timeout in seconds" }
+output_schema:
+  success: { type: boolean }
+  data: { type: object, description: "Generated-client response payload" }
+tags: [attune, trigger, api]

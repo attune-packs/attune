@@ -1,0 +1,19 @@
+ref: attune.inquiry_get
+label: "Get Inquiry"
+description: "Fetch an inquiry by ID"
+enabled: true
+runner_type: python
+entry_point: dispatch.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+parameters:
+  id: { type: integer, required: true, description: "Inquiry ID" }
+  api_url: { type: string, description: "Attune API base URL" }
+  api_token: { type: string, description: "Bearer token", secret: true }
+  verify_ssl: { type: boolean, default: true, description: "Verify TLS certificates" }
+  timeout: { type: integer, default: 30, description: "Request timeout in seconds" }
+output_schema:
+  success: { type: boolean }
+  data: { type: object, description: "Generated-client response payload" }
+tags: [attune, inquiry, api]

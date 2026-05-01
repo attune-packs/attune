@@ -1,0 +1,23 @@
+ref: attune.sensor_list
+label: "List Sensors"
+description: "List sensors with optional pack, trigger, or enabled filters"
+enabled: true
+runner_type: python
+entry_point: dispatch.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+parameters:
+  pack_ref: { type: string, description: "Optional pack ref filter" }
+  trigger_ref: { type: string, description: "Optional trigger ref filter" }
+  enabled: { type: boolean, description: "List enabled sensors only" }
+  page: { type: integer, default: 1, description: "Page number" }
+  page_size: { type: integer, default: 50, description: "Items per page" }
+  api_url: { type: string, description: "Attune API base URL" }
+  api_token: { type: string, description: "Bearer token", secret: true }
+  verify_ssl: { type: boolean, default: true, description: "Verify TLS certificates" }
+  timeout: { type: integer, default: 30, description: "Request timeout in seconds" }
+output_schema:
+  success: { type: boolean }
+  data: { type: object, description: "Generated-client response payload" }
+tags: [attune, sensor, api]

@@ -1,0 +1,21 @@
+ref: attune.workflow_list
+label: "List Workflows"
+description: "List workflows with optional pack filter"
+enabled: true
+runner_type: python
+entry_point: dispatch.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+parameters:
+  pack_ref: { type: string, description: "Optional pack ref filter" }
+  page: { type: integer, description: "Page number" }
+  page_size: { type: integer, description: "Page size" }
+  api_url: { type: string, description: "Attune API base URL" }
+  api_token: { type: string, description: "Bearer token", secret: true }
+  verify_ssl: { type: boolean, default: true, description: "Verify TLS certificates" }
+  timeout: { type: integer, default: 30, description: "Request timeout in seconds" }
+output_schema:
+  success: { type: boolean }
+  data: { type: object, description: "Generated-client response payload" }
+tags: [attune, workflow, api]

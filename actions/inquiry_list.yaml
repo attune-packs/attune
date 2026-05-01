@@ -1,0 +1,23 @@
+ref: attune.inquiry_list
+label: "List Inquiries"
+description: "List inquiries with filters"
+enabled: true
+runner_type: python
+entry_point: dispatch.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+parameters:
+  status: { type: string, description: "Status filter" }
+  execution: { type: integer, description: "Execution ID filter" }
+  assigned_to: { type: integer, description: "Assignee identity ID filter" }
+  offset: { type: integer, description: "Offset" }
+  limit: { type: integer, description: "Limit" }
+  api_url: { type: string, description: "Attune API base URL" }
+  api_token: { type: string, description: "Bearer token", secret: true }
+  verify_ssl: { type: boolean, default: true, description: "Verify TLS certificates" }
+  timeout: { type: integer, default: 30, description: "Request timeout in seconds" }
+output_schema:
+  success: { type: boolean }
+  data: { type: object, description: "Generated-client response payload" }
+tags: [attune, inquiry, api]

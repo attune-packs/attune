@@ -1,0 +1,22 @@
+ref: attune.trigger_list
+label: "List Triggers"
+description: "List triggers with optional pack or enabled filters"
+enabled: true
+runner_type: python
+entry_point: dispatch.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+parameters:
+  pack_ref: { type: string, description: "Optional pack ref filter" }
+  enabled: { type: boolean, description: "List enabled triggers only" }
+  page: { type: integer, default: 1, description: "Page number" }
+  page_size: { type: integer, default: 50, description: "Items per page" }
+  api_url: { type: string, description: "Attune API base URL" }
+  api_token: { type: string, description: "Bearer token", secret: true }
+  verify_ssl: { type: boolean, default: true, description: "Verify TLS certificates" }
+  timeout: { type: integer, default: 30, description: "Request timeout in seconds" }
+output_schema:
+  success: { type: boolean }
+  data: { type: object, description: "Generated-client response payload" }
+tags: [attune, trigger, api]

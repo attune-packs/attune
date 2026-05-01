@@ -1,0 +1,67 @@
+# Enqueue Batch Action - Attune Meta-Pack
+# Inserts a collection of records into a configured work queue.
+#
+# Implemented as a Python action (uses httpx). Reads parameters as a single
+# JSON document on stdin and issues one POST to
+# /api/v1/queues/{queue_ref}/items per item, aggregating per-item results.
+#
+# Each entry in `items` may be either:
+#   * a bare payload (object/scalar/array), or
+#   * an envelope `{ payload, item_key?, priority?, metadata? }` for
+#     per-item overrides on top of the action-wide shared defaults.
+
+ref: attune.enqueue_batch
+label: "Enqueue Queue Items (Batch)"
+description: "Insert a collection of records into a work queue. Optional shared priority and metadata apply when not overridden per-item."
+enabled: true
+
+runner_type: python
+
+entry_point: enqueue_batch.py
+
+parameter_delivery: stdin
+parameter_format: json
+
+output_format: json
+
+parameters:
+  queue_ref:
+    type: string
+    description: "Reference of the work queue to insert into (e.g., core.inbox)."
+    required: true
+  items:
+    type: array
+    description: "Records to enqueue. Each entry is either a bare payload or a {payload, item_key?, priority?, metadata?} envelope."
+    required: true
+  priority:
+    type: integer
+    description: "Shared priority applied to every item that doesn't override it. If omitted, the queue's default_priority applies."
+  metadata:
+    type: object
+    description: "Shared metadata applied to every item that doesn't override it."
+  item_key_field:
+    type: string
+    description: "Optional dotted JSON path within each payload whose value should be used as that item's idempotency key (e.g., 'Id' or 'attributes.url')."
+
+output_schema:
+  success:
+    type: boolean
+    description: "True only if every item was enqueued successfully."
+  count:
+    type: integer
+    description: "Total number of items processed."
+  succeeded:
+    type: integer
+    description: "Number of items that were enqueued successfully."
+  failed:
+    type: integer
+    description: "Number of items that failed to enqueue."
+  items:
+    type: array
+    description: "Per-item result rows: { index, success, id?, queue?, item_key?, priority?, status?, error?, http_status? }."
+
+tags:
+  - attune
+  - queues
+  - enqueue
+  - batch

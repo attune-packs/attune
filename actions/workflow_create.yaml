@@ -1,0 +1,27 @@
+ref: attune.workflow_create
+label: "Create Workflow"
+description: "Create a new workflow"
+enabled: true
+runner_type: python
+entry_point: dispatch.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+parameters:
+  ref: { type: string, required: true, description: "Workflow ref" }
+  label: { type: string, required: true, description: "Workflow label" }
+  pack_ref: { type: string, required: true, description: "Pack ref" }
+  version: { type: string, required: true, description: "Workflow version" }
+  definition: { type: object, required: true, description: "Workflow definition" }
+  param_schema: { type: object, required: true, description: "Input schema" }
+  out_schema: { type: object, required: true, description: "Output schema" }
+  description: { type: string, description: "Workflow description" }
+  tags: { type: array, items: { type: string }, description: "Workflow tags" }
+  api_url: { type: string, description: "Attune API base URL" }
+  api_token: { type: string, description: "Bearer token", secret: true }
+  verify_ssl: { type: boolean, default: true, description: "Verify TLS certificates" }
+  timeout: { type: integer, default: 30, description: "Request timeout in seconds" }
+output_schema:
+  success: { type: boolean }
+  data: { type: object, description: "Generated-client response payload" }
+tags: [attune, workflow, api]

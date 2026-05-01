@@ -1,0 +1,49 @@
+ref: attune.execution_run
+label: "Run Execution"
+description: "Request a new execution for an Attune action"
+enabled: true
+runner_type: python
+entry_point: execution_run.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+
+parameters:
+  action_ref:
+    type: string
+    description: "Action ref to execute"
+    required: true
+  parameters:
+    type: object
+    description: "Action parameters"
+  env_vars:
+    type: object
+    description: "Optional execution environment variables"
+  api_url:
+    type: string
+    description: "Attune API base URL"
+  api_token:
+    type: string
+    description: "Bearer token for the target Attune API"
+    secret: true
+  verify_ssl:
+    type: boolean
+    description: "Verify TLS certificates"
+    default: true
+  timeout:
+    type: integer
+    description: "Request timeout in seconds"
+    default: 30
+
+output_schema:
+  success:
+    type: boolean
+  data:
+    type: object
+    description: "Generated-client response payload"
+
+tags:
+  - attune
+  - execution
+  - api
+  - run

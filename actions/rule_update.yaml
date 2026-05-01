@@ -1,0 +1,25 @@
+ref: attune.rule_update
+label: "Update Rule"
+description: "Update an existing rule"
+enabled: true
+runner_type: python
+entry_point: dispatch.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+parameters:
+  ref: { type: string, required: true, description: "Rule ref" }
+  label: { type: string, description: "Updated label" }
+  description: { type: string, description: "Updated description" }
+  enabled: { type: boolean, description: "Updated enabled flag" }
+  conditions: { type: object, description: "Updated conditions or null" }
+  action_params: { type: object, description: "Updated action params or null" }
+  trigger_params: { type: object, description: "Updated trigger params or null" }
+  api_url: { type: string, description: "Attune API base URL" }
+  api_token: { type: string, description: "Bearer token", secret: true }
+  verify_ssl: { type: boolean, default: true, description: "Verify TLS certificates" }
+  timeout: { type: integer, default: 30, description: "Request timeout in seconds" }
+output_schema:
+  success: { type: boolean }
+  data: { type: object, description: "Generated-client response payload" }
+tags: [attune, rule, api]

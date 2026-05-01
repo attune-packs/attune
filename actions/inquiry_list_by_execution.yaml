@@ -1,0 +1,21 @@
+ref: attune.inquiry_list_by_execution
+label: "List Inquiries By Execution"
+description: "List inquiries for a specific execution"
+enabled: true
+runner_type: python
+entry_point: dispatch.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+parameters:
+  execution_id: { type: integer, required: true, description: "Execution ID" }
+  page: { type: integer, description: "Page number" }
+  page_size: { type: integer, description: "Page size" }
+  api_url: { type: string, description: "Attune API base URL" }
+  api_token: { type: string, description: "Bearer token", secret: true }
+  verify_ssl: { type: boolean, default: true, description: "Verify TLS certificates" }
+  timeout: { type: integer, default: 30, description: "Request timeout in seconds" }
+output_schema:
+  success: { type: boolean }
+  data: { type: object, description: "Generated-client response payload" }
+tags: [attune, inquiry, api]
