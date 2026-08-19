@@ -1,10 +1,15 @@
 from __future__ import annotations
 
 import importlib
+import json
 import os
+import re
 from typing import Any
 
-from .errors import ClientDependencyError, ClientNotGeneratedError
+from .errors import ClientDependencyError, ClientNotGeneratedError, MetaPackError
+
+
+_CREDENTIAL_REF = re.compile(r"attune\.[A-Za-z0-9][A-Za-z0-9_.:-]{0,247}")
 
 
 def _import_client_module():
@@ -25,15 +30,73 @@ def _import_client_module():
         ) from exc
 
 
+def _fetch_external_credential(key_ref: Any) -> dict[str, Any]:
+    if not isinstance(key_ref, str) or not _CREDENTIAL_REF.fullmatch(key_ref):
+        raise MetaPackError("credential_key must be a pack-owned attune.* Key ref")
+
+    try:
+        import attune
+        from attune.api_client.api.secrets import get_key
+
+        response = get_key.sync_detailed(
+            key_ref, client=attune.context.client, decrypt=True
+        )
+    except Exception as exc:
+        raise MetaPackError(
+            f"Could not read external Attune credential Key ({type(exc).__name__})"
+        ) from None
+
+    if response.status_code != 200 or response.parsed is None:
+        if response.status_code == 404:
+            raise MetaPackError("External Attune credential Key was not found")
+        raise MetaPackError(
+            f"Could not read external Attune credential Key (HTTP {response.status_code})"
+        )
+
+    value = response.parsed.data.value
+    if isinstance(value, str):
+        try:
+            value = json.loads(value)
+        except json.JSONDecodeError:
+            raise MetaPackError(
+                "External Attune credential Key must contain a JSON object"
+            ) from None
+    if not isinstance(value, dict):
+        raise MetaPackError("External Attune credential Key must contain a JSON object")
+    if not isinstance(value.get("api_url"), str) or not value["api_url"]:
+        raise MetaPackError("External Attune credential requires api_url")
+    if not isinstance(value.get("api_token"), str) or not value["api_token"]:
+        raise MetaPackError("External Attune credential requires api_token")
+    if "verify_ssl" in value and not isinstance(value["verify_ssl"], bool):
+        raise MetaPackError("External Attune credential verify_ssl must be a boolean")
+    for field in ("timeout", "timeout_seconds"):
+        timeout = value.get(field)
+        if timeout is not None and (
+            isinstance(timeout, bool)
+            or not isinstance(timeout, int)
+            or not 1 <= timeout <= 600
+        ):
+            raise MetaPackError(
+                f"External Attune credential {field} must be an integer from 1 to 600"
+            )
+    return value
+
+
 def build_client(params: dict[str, Any], *, require_auth: bool = True):
     client_module = _import_client_module()
+    credential = None
+    if params.get("credential_key") is not None:
+        credential = _fetch_external_credential(params["credential_key"])
 
     api_url = (
-        params.get("api_url")
+        (credential or {}).get("api_url")
+        or params.get("api_url")
         or os.environ.get("ATTUNE_API_URL")
         or "http://localhost:8080"
     )
-    verify_ssl = params.get("verify_ssl")
+    verify_ssl = (credential or {}).get("verify_ssl")
+    if verify_ssl is None:
+        verify_ssl = params.get("verify_ssl")
     if verify_ssl is None:
         verify_ssl = str(os.environ.get("ATTUNE_VERIFY_SSL", "true")).lower() in {
             "1",
@@ -41,13 +104,21 @@ def build_client(params: dict[str, Any], *, require_auth: bool = True):
             "yes",
         }
 
-    timeout_value = params.get("timeout")
+    timeout_value = (credential or {}).get("timeout")
+    if timeout_value is None:
+        timeout_value = (credential or {}).get("timeout_seconds")
+    if timeout_value is None:
+        timeout_value = params.get("timeout")
     if timeout_value is None:
         timeout_value = params.get("timeout_seconds")
     if timeout_value is None:
         timeout_value = int(os.environ.get("ATTUNE_TIMEOUT_SECONDS", "30"))
 
-    token = params.get("api_token") or os.environ.get("ATTUNE_API_TOKEN")
+    token = (
+        (credential or {}).get("api_token")
+        or params.get("api_token")
+        or os.environ.get("ATTUNE_API_TOKEN")
+    )
 
     kwargs = {
         "base_url": api_url,
@@ -59,7 +130,8 @@ def build_client(params: dict[str, Any], *, require_auth: bool = True):
     if require_auth:
         if not token:
             raise ValueError(
-                "This action requires an API token. Provide api_token or ATTUNE_API_TOKEN."
+                "This action requires an API token. Provide credential_key, api_token, "
+                "or ATTUNE_API_TOKEN."
             )
         return client_module.AuthenticatedClient(token=token, **kwargs)
 

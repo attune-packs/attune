@@ -8,6 +8,7 @@ parameter_delivery: stdin
 parameter_format: json
 output_format: json
 parameters:
+  credential_key: { type: string, description: "Optional attune.* Key containing external Attune credentials" }
   page: { type: integer, description: "Page number" }
   page_size: { type: integer, description: "Page size" }
   api_url: { type: string, description: "Attune API base URL" }

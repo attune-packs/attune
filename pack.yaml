@@ -4,7 +4,7 @@
 ref: attune
 label: "Attune"
 description: "Meta-pack for interacting with Attune via its OpenAPI-generated Python client"
-version: "0.1.0"
+version: "0.2.0"
 author: "Attune Team"
 email: "support@attune.io"
 

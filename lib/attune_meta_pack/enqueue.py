@@ -1,8 +1,9 @@
 """Shared logic for the `attune.enqueue` and `attune.enqueue_batch` actions.
 
 These actions POST one or more queue items to
-``/api/v1/queues/{queue_ref}/items`` using the execution-scoped
-``ATTUNE_API_TOKEN`` and ``ATTUNE_API_URL`` injected by the worker.
+``/api/v1/queues/{queue_ref}/items`` using the shared client factory. This
+supports an external Attune credential Key as well as execution-scoped
+``ATTUNE_API_TOKEN`` and ``ATTUNE_API_URL`` values injected by the worker.
 
 HTTP calls go through the vendored OpenAPI-generated client
 (``attune_client.api.queues.enqueue_queue_item``) so the wire format stays in

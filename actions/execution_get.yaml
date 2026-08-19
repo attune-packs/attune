@@ -9,6 +9,7 @@ parameter_format: json
 output_format: json
 
 parameters:
+  credential_key: { type: string, description: "Optional attune.* Key containing external Attune credentials" }
   execution_id:
     type: integer
     description: "Execution ID"

@@ -121,11 +121,29 @@ Python runtime via `runtime_deps` and uses `runner_type: python` in actions.
 
 Each action should construct the generated client through a shared helper:
 
+- `credential_key`: optional pack-owned `attune.*` Key containing external instance credentials
 - `api_url`: default `http://localhost:8080`
 - `api_token`: optional explicit token
 - fallback token: `ATTUNE_API_TOKEN`
 - `verify_ssl`: default `true`
 - `timeout`: action-specific
+
+An external instance credential should be stored in an encrypted Key containing
+a JSON object:
+
+```json
+{
+  "api_url": "https://attune.example.com",
+  "api_token": "...",
+  "verify_ssl": true,
+  "timeout_seconds": 30
+}
+```
+
+When `credential_key` is provided, the Key's target URL, token, TLS setting, and
+optional timeout take precedence over inline action parameters and the local
+execution environment. The Key itself is always read from the Attune instance
+executing the action, using its execution-scoped client.
 
 Use `AuthenticatedClient` when a bearer token is available, otherwise `Client`
 for the small number of public endpoints that may still be wrapped later.

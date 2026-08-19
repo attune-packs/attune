@@ -25,6 +25,24 @@ parameter_format: json
 output_format: json
 
 parameters:
+  credential_key:
+    type: string
+    description: "Optional attune.* Key containing external Attune credentials"
+  api_url:
+    type: string
+    description: "Attune API base URL"
+  api_token:
+    type: string
+    description: "Bearer token for the target Attune API"
+    secret: true
+  verify_ssl:
+    type: boolean
+    description: "Verify TLS certificates"
+    default: true
+  timeout:
+    type: integer
+    description: "Request timeout in seconds"
+    default: 30
   queue_ref:
     type: string
     description: "Reference of the work queue to insert into (e.g., core.inbox)."
