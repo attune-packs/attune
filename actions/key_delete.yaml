@@ -1,6 +1,6 @@
-ref: attune.trigger_update
-label: "Update Trigger"
-description: "Update an existing trigger"
+ref: attune.key_delete
+label: "Delete Key"
+description: "Delete a key by its canonical reference"
 enabled: true
 runner_type: python
 entry_point: dispatch.py
@@ -9,12 +9,7 @@ parameter_format: json
 output_format: json
 parameters:
   credential_key: { type: string, description: "Optional pack.attune.* Key containing external Attune credentials" }
-  ref: { type: string, required: true, description: "Trigger ref" }
-  label: { type: string, description: "Updated label" }
-  description: { type: string, description: "Updated description" }
-  enabled: { type: boolean, description: "Updated enabled flag" }
-  param_schema: { type: object, description: "Updated parameter schema or null" }
-  out_schema: { type: object, description: "Updated output schema or null" }
+  ref: { type: string, required: true, description: "Canonical key ref" }
   api_url: { type: string, description: "Attune API base URL" }
   api_token: { type: string, description: "Bearer token", secret: true }
   verify_ssl: { type: boolean, default: true, description: "Verify TLS certificates" }
@@ -22,4 +17,4 @@ parameters:
 output_schema:
   success: { type: boolean }
   data: { type: object, description: "Generated-client response payload" }
-tags: [attune, trigger, api]
+tags: [attune, key, api]

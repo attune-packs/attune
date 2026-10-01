@@ -8,7 +8,7 @@ parameter_delivery: stdin
 parameter_format: json
 output_format: json
 parameters:
-  credential_key: { type: string, description: "Optional attune.* Key containing external Attune credentials" }
+  credential_key: { type: string, description: "Optional pack.attune.* Key containing external Attune credentials" }
   source: { type: string, required: true, description: "Repository URL or source location" }
   ref_spec: { type: string, description: "Branch, tag, or commit" }
   skip_deps: { type: boolean, description: "Skip dependency validation" }

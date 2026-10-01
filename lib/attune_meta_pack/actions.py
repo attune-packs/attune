@@ -522,7 +522,7 @@ def key_list(params: dict[str, Any]) -> Any:
 
 
 def key_create(params: dict[str, Any]) -> Any:
-    for field in ("ref", "name", "owner_type"):
+    for field in ("local_ref", "name", "owner_type"):
         if not params.get(field):
             raise ValueError(f"{field} is required")
     if "value" not in params:
@@ -530,24 +530,25 @@ def key_create(params: dict[str, Any]) -> Any:
 
     client = build_client(params)
     sync = import_symbol("attune_client.api.secrets.create_key", "sync")
+    payload = {
+        "local_ref": params["local_ref"],
+        "name": params["name"],
+        "owner_type": params["owner_type"],
+        "value": params["value"],
+    }
+    for field in (
+        "encrypted",
+        "owner_action_ref",
+        "owner_identity_login",
+        "owner_pack_ref",
+        "owner_sensor_ref",
+    ):
+        if params.get(field) is not None:
+            payload[field] = params[field]
     body = _build_model(
         "attune_client.models.create_key_request",
         "CreateKeyRequest",
-        {
-            "ref": params["ref"],
-            "name": params["name"],
-            "owner_type": params["owner_type"],
-            "value": params["value"],
-            "encrypted": params.get("encrypted"),
-            "owner": params.get("owner"),
-            "owner_action": params.get("owner_action"),
-            "owner_action_ref": params.get("owner_action_ref"),
-            "owner_identity": params.get("owner_identity"),
-            "owner_pack": params.get("owner_pack"),
-            "owner_pack_ref": params.get("owner_pack_ref"),
-            "owner_sensor": params.get("owner_sensor"),
-            "owner_sensor_ref": params.get("owner_sensor_ref"),
-        },
+        payload,
     )
     return sync(client=client, body=body)
 
@@ -559,14 +560,15 @@ def key_update(params: dict[str, Any]) -> Any:
 
     client = build_client(params)
     sync = import_symbol("attune_client.api.secrets.update_key", "sync")
+    payload = {
+        field: params[field]
+        for field in ("name", "value", "encrypted")
+        if field in params
+    }
     body = _build_model(
         "attune_client.models.update_key_request",
         "UpdateKeyRequest",
-        {
-            "name": params.get("name"),
-            "value": params.get("value"),
-            "encrypted": params.get("encrypted"),
-        },
+        payload,
     )
     return sync(ref=str(key_ref), client=client, body=body)
 
@@ -1431,6 +1433,11 @@ ACTIONS: dict[str, Callable[[dict[str, Any]], Any]] = {
     "attune.inquiry_list_by_execution": inquiry_list_by_execution,
     "attune.inquiry_list_by_status": inquiry_list_by_status,
     "attune.inquiry_respond": inquiry_respond,
+    "attune.key_get": key_get,
+    "attune.key_list": key_list,
+    "attune.key_create": key_create,
+    "attune.key_update": key_update,
+    "attune.key_delete": key_delete,
     "attune.rule_get": rule_get,
     "attune.rule_list": rule_list,
     "attune.rule_create": rule_create,

@@ -8,7 +8,7 @@ parameter_delivery: stdin
 parameter_format: json
 output_format: json
 parameters:
-  credential_key: { type: string, description: "Optional attune.* Key containing external Attune credentials" }
+  credential_key: { type: string, description: "Optional pack.attune.* Key containing external Attune credentials" }
   pack_ref: { type: string, description: "Optional pack ref filter" }
   enabled: { type: boolean, description: "List enabled triggers only" }
   page: { type: integer, default: 1, description: "Page number" }

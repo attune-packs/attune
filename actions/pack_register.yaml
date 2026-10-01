@@ -8,7 +8,7 @@ parameter_delivery: stdin
 parameter_format: json
 output_format: json
 parameters:
-  credential_key: { type: string, description: "Optional attune.* Key containing external Attune credentials" }
+  credential_key: { type: string, description: "Optional pack.attune.* Key containing external Attune credentials" }
   path: { type: string, required: true, description: "Local pack path" }
   force: { type: boolean, description: "Force registration" }
   skip_tests: { type: boolean, description: "Skip tests" }

@@ -295,7 +295,7 @@ from .paginated_response_identity_summary_data_item import PaginatedResponseIden
 from .paginated_response_inquiry_summary import PaginatedResponseInquirySummary
 from .paginated_response_inquiry_summary_data_item import PaginatedResponseInquirySummaryDataItem
 from .paginated_response_key_summary import PaginatedResponseKeySummary
-from .paginated_response_key_summary_data_item import PaginatedResponseKeySummaryDataItem
+from .paginated_response_key_summary_items_item import PaginatedResponseKeySummaryItemsItem
 from .paginated_response_pack_summary import PaginatedResponsePackSummary
 from .paginated_response_pack_summary_data_item import PaginatedResponsePackSummaryDataItem
 from .paginated_response_pack_test_summary import PaginatedResponsePackTestSummary
@@ -759,7 +759,7 @@ __all__ = (
     "PaginatedResponseInquirySummary",
     "PaginatedResponseInquirySummaryDataItem",
     "PaginatedResponseKeySummary",
-    "PaginatedResponseKeySummaryDataItem",
+    "PaginatedResponseKeySummaryItemsItem",
     "PaginatedResponsePackSummary",
     "PaginatedResponsePackSummaryDataItem",
     "PaginatedResponsePackTestSummary",

@@ -1,0 +1,28 @@
+ref: attune.key_create
+label: "Create Key"
+description: "Create a key in an owner scope"
+enabled: true
+runner_type: python
+entry_point: dispatch.py
+parameter_delivery: stdin
+parameter_format: json
+output_format: json
+parameters:
+  credential_key: { type: string, description: "Optional pack.attune.* Key containing external Attune credentials" }
+  local_ref: { type: string, required: true, pattern: "^[a-z0-9][a-z0-9_-]{0,62}$", description: "Key identifier within the owner scope" }
+  name: { type: string, required: true, description: "Human-readable key name" }
+  owner_type: { type: string, required: true, enum: [action, identity, pack, sensor, system], description: "Key owner type" }
+  value: { type: any, required: true, secret: true, description: "Secret value" }
+  encrypted: { type: boolean, description: "Encrypt the value at rest" }
+  owner_action_ref: { type: string, description: "Owner action reference" }
+  owner_identity_login: { type: string, description: "Owner identity login" }
+  owner_pack_ref: { type: string, description: "Owner pack reference" }
+  owner_sensor_ref: { type: string, description: "Owner sensor reference" }
+  api_url: { type: string, description: "Attune API base URL" }
+  api_token: { type: string, description: "Bearer token", secret: true }
+  verify_ssl: { type: boolean, default: true, description: "Verify TLS certificates" }
+  timeout: { type: integer, default: 30, description: "Request timeout in seconds" }
+output_schema:
+  success: { type: boolean }
+  data: { type: object, description: "Generated-client response payload" }
+tags: [attune, key, api]

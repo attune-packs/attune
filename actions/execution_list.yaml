@@ -9,7 +9,7 @@ parameter_format: json
 output_format: json
 
 parameters:
-  credential_key: { type: string, description: "Optional attune.* Key containing external Attune credentials" }
+  credential_key: { type: string, description: "Optional pack.attune.* Key containing external Attune credentials" }
   status:
     type: string
     description: "Optional execution status filter"

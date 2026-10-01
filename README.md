@@ -121,7 +121,7 @@ Python runtime via `runtime_deps` and uses `runner_type: python` in actions.
 
 Each action should construct the generated client through a shared helper:
 
-- `credential_key`: optional pack-owned `attune.*` Key containing external instance credentials
+- `credential_key`: optional `pack.attune.*` Key containing external instance credentials
 - `api_url`: default `http://localhost:8080`
 - `api_token`: optional explicit token
 - fallback token: `ATTUNE_API_TOKEN`

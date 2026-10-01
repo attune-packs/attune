@@ -1,6 +1,6 @@
-ref: attune.webhook_regenerate
-label: "Regenerate Webhook Key"
-description: "Regenerate the webhook key for a trigger"
+ref: attune.key_list
+label: "List Keys"
+description: "List keys with pagination and optional owner filters"
 enabled: true
 runner_type: python
 entry_point: dispatch.py
@@ -9,12 +9,15 @@ parameter_format: json
 output_format: json
 parameters:
   credential_key: { type: string, description: "Optional pack.attune.* Key containing external Attune credentials" }
-  ref: { type: string, required: true, description: "Trigger ref" }
+  owner_type: { type: string, enum: [action, identity, pack, sensor, system], description: "Optional owner type filter" }
+  owner: { type: string, description: "Optional authoritative owner reference filter" }
+  page: { type: integer, default: 1, description: "Page number" }
+  per_page: { type: integer, default: 50, description: "Items per page" }
   api_url: { type: string, description: "Attune API base URL" }
   api_token: { type: string, description: "Bearer token", secret: true }
   verify_ssl: { type: boolean, default: true, description: "Verify TLS certificates" }
   timeout: { type: integer, default: 30, description: "Request timeout in seconds" }
 output_schema:
   success: { type: boolean }
-  data: { type: object, description: "Generated-client response payload" }
-tags: [attune, trigger, webhook, api]
+  data: { type: object, description: "Generated-client response payload with items and pagination" }
+tags: [attune, key, api]

@@ -23,7 +23,7 @@ output_format: json
 parameters:
   credential_key:
     type: string
-    description: "Optional attune.* Key containing external Attune credentials"
+    description: "Optional pack.attune.* Key containing external Attune credentials"
   api_url:
     type: string
     description: "Attune API base URL"

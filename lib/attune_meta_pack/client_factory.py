@@ -9,7 +9,7 @@ from typing import Any
 from .errors import ClientDependencyError, ClientNotGeneratedError, MetaPackError
 
 
-_CREDENTIAL_REF = re.compile(r"attune\.[A-Za-z0-9][A-Za-z0-9_.:-]{0,247}")
+_CREDENTIAL_REF = re.compile(r"pack\.attune\.[a-z0-9][a-z0-9_-]{0,62}")
 
 
 def _import_client_module():
@@ -32,15 +32,13 @@ def _import_client_module():
 
 def _fetch_external_credential(key_ref: Any) -> dict[str, Any]:
     if not isinstance(key_ref, str) or not _CREDENTIAL_REF.fullmatch(key_ref):
-        raise MetaPackError("credential_key must be a pack-owned attune.* Key ref")
+        raise MetaPackError("credential_key must be a pack.attune.* Key ref")
 
     try:
         import attune
         from attune.api_client.api.secrets import get_key
 
-        response = get_key.sync_detailed(
-            key_ref, client=attune.context.client, decrypt=True
-        )
+        response = get_key.sync_detailed(key_ref, client=attune.context.client)
     except Exception as exc:
         raise MetaPackError(
             f"Could not read external Attune credential Key ({type(exc).__name__})"
